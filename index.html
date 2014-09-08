@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ruby on Rails 4.2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      li {
+        margin-bottom: 20px;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      .darkslide {
+        background: #45484d; /* Old browsers */
+        background: linear-gradient(to bottom, #45484d 0%,#000000 100%);
+        color: #eee;
+      }
+      .darkslide a {
+        color: #ddd;
+      }
+      .lightslide {
+        background: #e9f6fd;
+        background: linear-gradient(to bottom, #e9f6fd 0%,#d3eefb 100%);
+        color: #222;
+      }
+      .colorfulslide {
+        background: #f8ffe8;
+        background: linear-gradient(to bottom, #f8ffe8 0%,#e3f5ab 33%,#b7df2d 100%);
+      }
+      .alsocolorfulslide {
+        background: #febbbb;
+        background: linear-gradient(to bottom, #febbbb 0%,#fe9090 45%,#ff5c5c 100%);
+      }
+      .command-line {
+        background-color: #191919;
+        color: green;
+      }
+      .devhub {
+        background-image: url('devhub.jpg');
+        background-size: cover !important;
+        color: white;
+        text-shadow: 1px 1px 1px black;
+      }
+      .devhub a {
+        color: white;
+      }
+      .me-background {
+        background-image: url('me.jpg');
+        background-size: cover !important;
+
+        padding-left: 65%;
+        padding-top: 40%;
+
+        color: white;
+      }
+      .me-background a {
+        text-decoration: none;
+        color: white;
+      }
+      .reinteractive {
+        background-color: #222;
+        color: #eee;
+      }
+      .reinteractive img {
+        vertical-align: middle;
+      }
+      .smaller-ruby img {
+        height: 300px;
+      }
+      .larger-code .remark-code {
+        font-size: 1.2em;
+      }
+      .only-code {
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+      .only-code pre {
+        margin: 20px;
+      }
+      .centered-title h1 {
+        text-align: center;
+      }
+      .rails {
+        background-image: url(rails_code.png);
+        background-size: cover !important;
+
+        color: #eee;
+      }
+      .rails h1, .rails p, .rails li {
+        text-shadow: 2px 2px 2px black;
+      }
+      img[alt="chrome-logo"] {
+        height: 200px;
+        position: absolute;
+        left: 0;
+        top: 250px;
+      }
+      img[alt="rails"] {
+        height: 200px;
+        position: absolute;
+        right: 80px;
+        top: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, smaller-ruby
+
+![ruby](ruby.png)
+# Ruby on Rails
+## 4.2 preview
+
+---
+
+class: me-background
+
+# `whoami`
+* Leonard
+* Ruby/Rails/Web Dev
+* [@lgarvey](https://twitter.com/lgarvey)
+
+---
+
+class: reinteractive, center, middle
+
+![logo1](reinteractive-logo1.jpg)
+![logo2](reinteractive-logo2.png)
+
+We build custom online applications primarily with Ruby on Rails.
+
+---
+
+class: centered-title
+
+# ActiveJob
+
+```ruby
+# in an initializer
+ActiveJob::Base.queue_adapter = :sidekiq # :inline and other worse options
+
+# in app/jobs/publish_blog_job.rb
+class PublishBlogJob < ActiveJob::Base
+  def perform(blog)
+    blog.publish!
+  end
+end
+
+# when you create your blog post. Service/Factory object.
+PublishBlogJob.set(wait_until: blog.publish_at).perform_later(blog)
+```
+
+* GlobalID looks handy.
+* ActionMailer has `#deliver_later` to async send your emails.
+
+???
+
+I will be interested to see how the Sidekiq community evolves from this.
+Personally I find Sidetiq to be amazingly useful, but seeing how this integrates in is not
+obvious.
+
+---
+
+class: center, middle
+
+# Web console
+
+## Is a worse thing than better_errors.
+#### Seriously, just use [`better_errors`](https://github.com/charliesome/better_errors)
+
+???
+
+Better errors is still better.
+
+---
+
+class: rails
+
+# Interesting changes
+
+* `respond_with` is now in a separate gem.
+* Changed default value for `config.assets.digest` to true in development
+* `*_filter` (like `before_filter`) no longer documented. Use `*_action` instead!
+* Removed `*_path` helpers from `ActionMailer` use `*_url` helpers instead.
+* Added `rake db:purge` to empty the current database.
+* Support for foreign keys.
+* Support for Postgres 9.4 JSONB!
+* No more 255 character limit for strings in Postgres and SQLite.
+* I added configuration to allow mail previews to be used outside of development.
+
+???
+
+The foreign key support is nearly identical to foreigner. Personally I dont
+think it is fully complete yet since there are a few helpers which should
+probably add a foreign key but dont.
+
+Support for JSONB is huge. There should be zero-reason to use Mongo over Postgres now.
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
